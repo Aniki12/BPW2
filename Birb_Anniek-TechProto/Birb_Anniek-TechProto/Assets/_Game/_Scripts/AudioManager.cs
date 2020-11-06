@@ -36,7 +36,6 @@ public class Sound
 public class AudioManager : MonoBehaviour
 {
     #region Singleton
-    // Singleton (written by: Randy Paulus)
     private static AudioManager instance;
     public static AudioManager GetInstance() { return instance; }
 

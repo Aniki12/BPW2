@@ -20,7 +20,7 @@ public class PlayerCollisionCheck : MonoBehaviour
     void OnCollisionEnter2D(Collision2D Other)
     {
         // If we collide with the floor (or a platform) we can jump again
-        if (Other.collider.gameObject.tag == "floor" || Other.collider.gameObject.tag == "platform")
+        if (Other.collider.gameObject.tag == "floor" || Other.collider.gameObject.tag == "platform" || Other.collider.gameObject.tag == "prop")
         {
             playerMove.isGrounded = true;
             playerMove.canJump = true;
@@ -102,6 +102,14 @@ public class PlayerCollisionCheck : MonoBehaviour
                 Debug.Log("Stored: " + platformID + " from Empty");
                 // Add ID to playerOrder
                 gm.playerOrder.Add(platformID);
+            }
+
+            // If player hits wrong platform
+            if (gm.playerOrder.Count > 0) {
+                if (platformID != gm.platformOrder[gm.playerOrder.Count - 1]) {
+                    Debug.Log("Wrong Platform");
+                    gm.OnLose();
+                }
             }
         }
     }

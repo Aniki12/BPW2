@@ -33,6 +33,8 @@ public class GameMaster : MonoBehaviour
     public List<int> platformOrder;                         // This is the preset list with the correct order
     public List<int> playerOrder;                           // This is the list with the player's order
 
+    public bool isPlayingAudio;
+
     [Space]
     public float intervalBetweenNotes = 0.8f;               // Set interval between notes
 
@@ -49,6 +51,8 @@ public class GameMaster : MonoBehaviour
     {
         audioManager = AudioManager.GetInstance();          // Call this singleton
         playerMove = PlayerMovement.GetInstance();          // Call this singleton
+
+        isPlayingAudio = true;
 
         StartCoroutine( PlayCorrectNotes());                // Start a coroutine
     }
@@ -68,12 +72,6 @@ public class GameMaster : MonoBehaviour
                     OnWin();
                     endScreen.SetActive(true);              // Sets the endscreen active
                 }
-                else if (playerOrder[i] != platformOrder[i] && !runOnce)
-                {
-                    // If they don't, player loses
-                    OnLose();
-                    endScreen.SetActive(true);              // Sets the endscreen active
-                }
             }
         }
     }
@@ -81,6 +79,7 @@ public class GameMaster : MonoBehaviour
     // Play the correct pattern at the start of the game
     public IEnumerator PlayCorrectNotes()
     {
+        isPlayingAudio = true;
         // Loop through list to check which notes are present
         for (int i = 0; i < platformOrder.Count; i++)
         {
@@ -93,28 +92,23 @@ public class GameMaster : MonoBehaviour
             else if (platformOrder[i] == 7) { audioManager.PlaySound("G"); }            // Play Sound G
             yield return new WaitForSeconds(intervalBetweenNotes);                      // Wait for specified amount of seconds before playing next note
         }
+        isPlayingAudio = false;
     }
 
     // What happens if the player wins...
     void OnWin()
     {
-        endScreen.SetActive(true);                                  // Sets the endscreen active
         runOnce = true;
         Debug.Log("PLAYER WINS!");
-        winLoseText.text = "YOU WIN!";                              // Sets text on endscreen to YOU WIN
         playerMove.enabled = false;                                 // Disables PlayerMovement Script Component on EndScreen
+        EndScreenManager.GetInstance().WinScreen();
     }
     // What happens if the player loses...
-    void OnLose()
+    public void OnLose()
     {
         runOnce = true;
         Debug.Log("PLAYER LOSES!");
-        winLoseText.text = "YOU LOSE!";                             // Sets text on endscreen to YOU LOSE
         playerMove.enabled = false;                                 // Disables PlayerMovement Script Component on EndScreen
-    }
-
-    public void Retry()
-    {
-        SceneManager.LoadScene("Level_01");                         // Reloads the scene so player can try level again                  
+        EndScreenManager.GetInstance().LoseScreen();
     }
 }

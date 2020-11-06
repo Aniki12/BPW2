@@ -5,7 +5,6 @@
 public class PlayerMovement : MonoBehaviour
 {
     #region Singleton
-    // Singleton (written by: Randy Paulus)
     private static PlayerMovement instance;
     public static PlayerMovement GetInstance() { return instance; }
 
