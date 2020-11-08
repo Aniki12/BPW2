@@ -37,6 +37,8 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D rb2d;                           // Reference to the rigidbody
     Animator animator;                          // Reference to the Animator
 
+    public GameObject playersprite;
+
     void Start()
     {
         // Finds the rigidbody attached to the gameobjects child
@@ -63,6 +65,21 @@ public class PlayerMovement : MonoBehaviour
         // Set Set animation variable speed equal to moveX float
         float characterSpeed = moveX;
         animator.SetFloat("speed", characterSpeed);
+
+        if (moveX <= -0.05)
+        {
+            animator.SetBool("isrunning", true);
+            playersprite.transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+        else if (moveX >= 0.05) {
+            animator.SetBool("isrunning", true);
+            playersprite.transform.localScale = new Vector3(-1f, 1f, 1f);
+        }
+        else
+        {
+            animator.SetBool("isrunning", false);
+        }
+   
     }
 
     // Because we use Unity Physics it's saver to do Physics calculations in the FixedUpdate
